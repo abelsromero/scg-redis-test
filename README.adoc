@@ -1,0 +1,29 @@
+= Redis Rate Limiting exploration for SCG-OS
+
+== Running Redis
+
+ docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:lates
+
+Boot app already detects it without extra configuration.
+
+
+== Options
+
+=== Customizing default RequestRateLimiter
+
+* Created 'RedisRequestRateLimiterGatewayFilterFactory' wrapper to initialize configuration based on String notation.
+* Created 'RedisRateLimiterConfiguration' with required beans that need to be isolated
+
+Run following command to obtain 429 'Too Many Requests'.
+
+----
+curl -I "http://localhost:8080/wrapper/get" \
+  && curl -I "http://localhost:8080/wrapper/get" \
+  && curl -I "http://localhost:8080/wrapper/get" \
+  && curl -I "http://localhost:8080/wrapper/get" \
+  && curl -I "http://localhost:8080/wrapper/get"
+----
+
+*Limitations*
+
+* We can the RemainingHeader to be the same as scg-k8s, but there's no support for reporting the time for next request like scg-k8s does with `X-Retry-In`.

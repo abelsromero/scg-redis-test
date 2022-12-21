@@ -1,0 +1,47 @@
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    reactor.netty: TRACE
+  endpoint:
+    gateway:
+      enabled: true
+    health:
+      group:
+        custom:
+          include:
+            circuitBreakers
+    web:
+      exposure:
+        include: "*"
+server:
+  error:
+    include-binding-errors: always
+    include-message: always
+
+spring:
+  cloud:
+    gateway:
+      httpserver:
+        wiretap: true
+      actuator:
+        verbose:
+          enabled: true
+      routes:
+        - id: test-default
+          uri: "https://httpbin.org"
+          predicates:
+            - Path=/default/**
+          filters:
+            - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 2
+                redis-rate-limiter.requestedTokens: 1
+        - id: test
+          uri: "https://httpbin.org"
+          predicates:
+            - Path=/wrapper/**
+          filters:
+            - StripPrefix=1
+            - RedisRequestRateLimiter
