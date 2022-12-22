@@ -19,6 +19,7 @@ public class RedisRateLimiterConfiguration {
 	public static final String CUSTOM_REDIS_RATE_LIMITER_BEAN = "customRedisRateLimiter";
 
 	// copied from scg-os 'GatewayRedisAutoConfiguration'
+	// We replace the Default one from scgk8s
 	@Bean(CUSTOM_REDIS_RATE_LIMITER_BEAN)
 	RedisRateLimiter redisRateLimiter(
 			ReactiveStringRedisTemplate redisTemplate,

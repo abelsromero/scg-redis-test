@@ -2,10 +2,12 @@
 
 == Running Redis
 
- docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:lates
+ docker run --rm --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
 
 Boot app already detects it without extra configuration.
 
+// Run httpbin locally to reduce latency in tests
+// docker run --rm -p 80:80 kennethreitz/httpbin
 
 == Options
 
@@ -27,3 +29,9 @@ curl -I "http://localhost:8080/wrapper/get" \
 *Limitations*
 
 * We can the RemainingHeader to be the same as scg-k8s, but there's no support for reporting the time for next request like scg-k8s does with `X-Retry-In`.
+
+=== Reimplement our `RequestCounter` & `RequestCounterFactory`
+
+
+* Issues:
+    ** The Bucket configuration is not updated when route changes

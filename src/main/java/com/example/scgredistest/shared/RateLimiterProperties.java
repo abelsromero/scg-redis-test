@@ -1,4 +1,4 @@
-package com.example.scgredistest.wrapper;
+package com.example.scgredistest.shared;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import org.springframework.cloud.gateway.support.HasRouteId;
 import org.springframework.util.StringUtils;
 
 // Copied form scg-k8s
-class RateLimiterProperties implements HasRouteId {
+public class RateLimiterProperties implements HasRouteId {
 
 	private int limit = 0;
 	private Duration duration = Duration.ofSeconds(1);

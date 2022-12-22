@@ -27,8 +27,14 @@ spring:
         verbose:
           enabled: true
       routes:
+        - id: test
+          uri: "http://localhost"
+          predicates:
+            - Path=/bin/**
+          filters:
+            - StripPrefix=1
         - id: test-default
-          uri: "https://httpbin.org"
+          uri: "http://localhost"
           predicates:
             - Path=/default/**
           filters:
@@ -38,10 +44,24 @@ spring:
                 redis-rate-limiter.replenishRate: 1
                 redis-rate-limiter.burstCapacity: 2
                 redis-rate-limiter.requestedTokens: 1
-        - id: test
-          uri: "https://httpbin.org"
+        - id: test-wrapper
+          uri: "http://localhost"
           predicates:
             - Path=/wrapper/**
           filters:
             - StripPrefix=1
             - RedisRequestRateLimiter
+        - id: test-counters-route-1
+          uri: "http://localhost"
+          predicates:
+            - Path=/counter/**
+          filters:
+            - StripPrefix=1
+            - CountersRequestRateLimiter=1,30s
+        - id: test-counters-route-2
+          uri: "http://localhost"
+          predicates:
+            - Path=/counter2/**
+          filters:
+            - StripPrefix=1
+            - CountersRequestRateLimiter=1,30s
